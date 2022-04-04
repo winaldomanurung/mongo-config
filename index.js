@@ -117,4 +117,17 @@ app.patch("/update", (req, res) => {
   });
 });
 
+app.delete("/delete", (req, res) => {
+  MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
+    const db = client.db("kantor");
+    db.collection("karyawan").deleteOne({ ...req.query }, (err, results) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+      }
+      res.status(200).send(results);
+    });
+  });
+});
+
 app.listen(PORT, () => console.log`API Mongo is running on PORT: ${PORT}`);
