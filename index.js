@@ -74,4 +74,27 @@ app.get("/get-filter", (req, res) => {
   });
 });
 
+app.get("/get-group", (req, res) => {
+  MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
+    const db = client.db("kantor");
+    db.collection("karyawan")
+      .aggregate([
+        {
+          $group: {
+            _id: "$kota",
+            avgUsia: { $avg: "$usia" },
+            count: { $sum: 1 },
+          },
+        },
+      ])
+      .toArray((err, docs) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+        }
+        res.status(200).send(docs);
+      });
+  });
+});
+
 app.listen(PORT, () => console.log`API Mongo is running on PORT: ${PORT}`);
