@@ -49,6 +49,9 @@ app.get("/get-data", (req, res) => {
     const db = client.db("kantor");
     db.collection("karyawan")
       .find({})
+      .sort({ usia: 1 })
+      .limit(2)
+      .skip(2)
       .toArray((err, docs) => {
         if (err) {
           console.log(err);
