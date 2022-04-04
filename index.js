@@ -22,4 +22,26 @@ app.get("/", (req, res) => {
   res.status(200).send("<h4>Integrated Mongo with Express</h4>");
 });
 
+app.post("/add-data", (req, res) => {
+  MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
+    const db = client.db("kantor");
+    db.collection("karyawan").insertMany(
+      [
+        {
+          nama: "Budi",
+          report: "Laporan Hasil Kerja",
+        },
+      ],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+        }
+        console.log("Insert document success:", results);
+        res.status(200).send(results);
+      }
+    );
+  });
+});
+
 app.listen(PORT, () => console.log`API Mongo is running on PORT: ${PORT}`);
