@@ -100,4 +100,21 @@ app.get("/get-group", (req, res) => {
   });
 });
 
+app.patch("/update", (req, res) => {
+  MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
+    const db = client.db("kantor");
+    db.collection("karyawan").updateOne(
+      { ...req.query },
+      { $set: { ...req.body } },
+      (err, results) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+        }
+        res.status(200).send(results);
+      }
+    );
+  });
+});
+
 app.listen(PORT, () => console.log`API Mongo is running on PORT: ${PORT}`);
