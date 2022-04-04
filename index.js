@@ -22,25 +22,41 @@ app.get("/", (req, res) => {
   res.status(200).send("<h4>Integrated Mongo with Express</h4>");
 });
 
+// Add data from API
+// app.post("/add-data", (req, res) => {
+//   MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
+//     const db = client.db("kantor");
+//     db.collection("karyawan").insertMany(
+//       [
+//         {
+//           nama: "Budi",
+//           report: "Laporan Hasil Kerja",
+//         },
+//       ],
+//       (err, results) => {
+//         if (err) {
+//           console.log(err);
+//           res.status(500).send(err);
+//         }
+//         console.log("Insert document success:", results);
+//         res.status(200).send(results);
+//       }
+//     );
+//   });
+// });
+
+// Add data from CLIENT-FORM
 app.post("/add-data", (req, res) => {
   MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
     const db = client.db("kantor");
-    db.collection("karyawan").insertMany(
-      [
-        {
-          nama: "Budi",
-          report: "Laporan Hasil Kerja",
-        },
-      ],
-      (err, results) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send(err);
-        }
-        console.log("Insert document success:", results);
-        res.status(200).send(results);
+    db.collection("karyawan").insertMany([req.body], (err, results) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
       }
-    );
+      console.log("Insert Success :", results);
+      res.status(200).send(results);
+    });
   });
 });
 
@@ -49,9 +65,9 @@ app.get("/get-data", (req, res) => {
     const db = client.db("kantor");
     db.collection("karyawan")
       .find({})
-      .sort({ usia: 1 })
-      .limit(2)
-      .skip(2)
+      // .sort({ usia: 1 })
+      // .limit(2)
+      // .skip(2)
       .toArray((err, docs) => {
         if (err) {
           console.log(err);
